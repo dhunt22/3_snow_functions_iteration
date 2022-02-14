@@ -6,7 +6,6 @@ output:
   html_document:
     theme: cerulean
     toc: TRUE
-    toc_float: TRUE
 editor_options: 
   chunk_output_type: inline
 ---
@@ -29,7 +28,7 @@ R can read html using either rvest, xml, or xml2 packages. Here we are going to 
 
 ### Extract CSV links from webpage
 
-```{r}
+```{r, message=F, warning=F}
 site_url <- 'https://snowstudies.org/archived-data/'
 
 #Read the web url
@@ -54,7 +53,7 @@ links <- webpage %>%
 
 ### Download data in a for loop
 
-```{r}
+```{r, message=F, warning=F}
 
 #Grab only the name of the file by splitting out on forward slashes
 splits <- str_split_fixed(links,'/',8)
@@ -78,7 +77,7 @@ evaluate <- !all(downloaded)
 
 ### Download data in a map
 
-```{r}
+```{r, message=F, warning=F}
 
 #Map version of the same for loop (downloading 3 files)
 if(evaluate == T){
@@ -91,7 +90,7 @@ if(evaluate == T){
 
 ### Read in just the snow data as a loop
 
-```{r}
+```{r, message=F, warning=F}
 #Pattern matching to only keep certain files
 snow_files <- file_names %>%
   .[!grepl('SG_24',.)] %>%
@@ -112,7 +111,7 @@ summary(snow_data_full)
 
 ### Read in the data as a map function
 
-```{r}
+```{r, message=F, warning=F}
 
 our_snow_reader <- function(file){
   name = str_split_fixed(file,'/',2)[,2] %>%
@@ -130,7 +129,7 @@ summary(snow_data_full)
 
 ### Plot snow data
 
-```{r}
+```{r, message=F, warning=F}
 snow_yearly <- snow_data_full %>%
   group_by(Year,site) %>%
   summarize(mean_height = mean(Sno_Height_M,na.rm=T))
@@ -146,7 +145,7 @@ ggplot(snow_yearly,aes(x=Year,y=mean_height,color=site)) +
 
 1. Extract the meteorological data URLs. Here we want you to use the `rvest` package to get the URLs for the `SASP forcing` and `SBSP_forcing` meteorological datasets.
 
-```{r}
+```{r, message=F, warning=F}
 
 links_forcing <- webpage %>%
   html_nodes('a') %>%
@@ -156,7 +155,7 @@ links_forcing <- webpage %>%
 ```
 2. Download the meteorological data. Use the `download_file` and `str_split_fixed` commands to download the data and save it in your data folder. You can use a for loop or a map function. 
 
-```{r}
+```{r, message=F, warning=F}
 
 #Grab only the name of the file by splitting out on forward slashes
 splits2 <- str_split_fixed(links_forcing,'/',8)
@@ -174,7 +173,7 @@ for(i in 1:2){
 ```
 3. Write a custom function to read in the data and append a site column to the data. 
 
-```{r}
+```{r, message=F, warning=F}
 
 # this code grabs the variable names from the metadata pdf file
 library(pdftools)
@@ -223,7 +222,7 @@ summary(forcing_data_full)
 
 5. Make a line plot of mean temp by year by site (using the `air temp [K]` variable). Is there anything suspicious in the plot? Adjust your filtering if needed.
 
-```{r}
+```{r, message=F, warning=F}
 
 mean_temp_year <- forcing_data_full %>% 
   group_by(year, site) %>% 
@@ -311,5 +310,6 @@ for (i in 1:length(year_input)){
 }
 ```
 
-
-
+<script>
+<div class="tocify-extend-page" data-unique="tocify-extend-page" style="height: 0;"></div>
+</script>
